@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form</title>
+    <style>
+        h2{
+            color: red;
+        }
+        .container{
+            display: flex;
+            gap: 4px;
+        }
+       
+        img{
+            height: 20px;
+            width: 20px;
+            margin-top: 23px;
+        }
+        
+        .main{
+            display: flex;
+            font-weight: 600;
+        }
+        .labels{
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            margin-top: 25px;
+
+        }
+        .inputs{
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .btns{
+            display: flex;
+            gap: 4px;
+        }
+        .lang{
+            display: flex;
+            margin-top: 3px;
+        }
+        .addinfo{
+            margin-top: 80px;
+        }
+        .langName{
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .check{
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .gen{
+            display: flex;
+            gap: 5px;
+        }
+        form{
+           margin: 20px;
+        }
+
+
+    </style>
+</head>
+<body>
+    <form>
+        <div class="container">
+            <img src="employeeLogo.png" alt="logo">
+            <h2>Employee Registration Form</h2>
+        </div>
+        <div class="main">
+            <div class="labels">
+                <label for="fName">First Name</label>
+                <label for="lName">Last Name</label>
+                <label for="mailAdd1">Mail Address 1</label>
+                <label for="mailAdd2">Mail Address 2</label>
+                <label for="city">City</label>
+                <label for="state">State</label>
+                <label for="zip">Zip</label>
+                <label for="photo">Upload Photo</label>
+                <label for="mail">E-Mail</label>
+                <label for="mobile">Mobile</label>
+                <label for="lang">Languages Known</label>
+                <label for="info" class="addinfo">Additional Information</label>
+            </div>
+            <div class="inputs">
+                <div class="gen">
+                <input type="radio" name="gender" value="male" />Mr.
+                <input type="radio" name="gender" value="female" />Mrs.
+                <input type="radio" name="gender" value="kid" />Ms.
+                </div>
+                <input type="text" id="fName" name="fName" placeholder="First Name" />
+                <input type="text" id="lName" name="lName" placeholder="Last Name" />
+                <input type="text" id="mailAdd1" name="mailAdd1" />
+                <input type="text" id="mailAdd2" name="mailAdd2" />
+                <input type="text" id="city" name="city" />
+                <select name="state" id="state">
+                    <option value="GJ">Gujrat</option>
+                    <option value="MH">Maharashtra</option>
+                    <option value="RJ">Rajasthan</option>
+                    <option value="MP">Madhya Pradesh</option>
+                </select>
+                <input type="number" id="zip" name="zip" />
+                <input type="file" id="photo" name="photo" />
+                <input type="email" id="mail" name="mail" />
+                <input type="number" id="mobile" name="mobile" maxlength="10" placeholder="+91" />
+                <div class="lang">
+                <div class="check">
+                    <input type="checkbox" id="guj" name="guj" value="gujrati" />
+                    <input type="checkbox" id="hin" name="hin" value="hindi" />
+                    <input type="checkbox" id="eng" name="eng" value="english" />
+                    <input type="checkbox" id="mar" name="mar" value="marathi" />
+                </div>
+                <div class="langName">
+                    <label for="guj">Gujrati</label>
+                    <label for="hin">Hindi</label>
+                    <label for="eng">English</label>
+                    <label for="mar">Marathi</label>
+                </div>
+                </div>
+                <textarea id="info" name="info" rows="4" cols="30" placeholder="optional"></textarea>
+                <div class="btns">
+                <input type="submit" value="Submit" />
+                <input type="reset" value="Reset" />
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>

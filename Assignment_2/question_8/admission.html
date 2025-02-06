@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Admission Form</title>
+    <link rel="stylesheet" href="admission.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="home.html">Home</a>
+        <a href="academics.html">Academics</a>
+        <a href="admission.html">Admission</a>
+        <a href="gallery.html">Gallery</a>
+    </nav>
+    <div class="container">
+        <h2>College Admission Form</h2>
+        <form action="submit_form.php" method="post">
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" name="firstName" required>
+
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" name="lastName" required>
+
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="dob" required>
+
+            <label for="gender">Gender:</label>
+            <select id="gender" name="gender" required>
+                <option value="">Select</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+            </select>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" required>
+
+            <label for="address">Address:</label>
+            <textarea id="address" name="address" rows="4" required></textarea>
+
+            <label for="course">Course Applied For:</label>
+            <input type="text" id="course" name="course" required>
+
+            <label for="highSchool">High School Name:</label>
+            <input type="text" id="highSchool" name="highSchool" required>
+
+            <label for="highSchoolScore">High School Score:</label>
+            <input type="number" id="highSchoolScore" name="highSchoolScore" required>
+
+            <label for="gradYear">Year of Graduation:</label>
+            <input type="number" id="gradYear" name="gradYear" min="1900" max="2099" required>
+
+            <input type="submit" value="Submit Application">
+        </form>
+    </div>
+</body>
+</html>

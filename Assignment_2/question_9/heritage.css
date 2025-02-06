@@ -1,0 +1,11 @@
+img{
+    height: 300px;
+    width: 300px;
+}
+.sites{
+    text-align: center;
+    z-index: 1000;
+}
+body{
+    background-color: #9DC08B;
+}
