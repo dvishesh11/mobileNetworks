@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML5 + CSS3</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <Link rel="stylesheet" href="styles.css">
+    
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">CSS3 Showcase</div>
+                <ul class="nav-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+                <button class="dark-mode-toggle" id="darkModeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Modern CSS3 Design</h1>
+            <p>Creating beautiful, responsive websites with advanced CSS3 techniques.</p>
+            <a href="#features" class="btn">Explore Features</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Powerful Features</h2>
+            <div class="features-container">
+                <div class="animate-fade-in feature-card">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h3>Responsive Design</h3>
+                    <p>Layouts that automatically adapt to any device size, ensuring a perfect user experience on desktops, tablets, and phones.</p>
+                </div>
+                <div class="animate-fade-in feature-card">
+                    <i class="fas fa-paint-brush"></i>
+                    <h3>Modern Aesthetics</h3>
+                    <p>Clean and contemporary design elements that engage users and enhance brand perception.</p>
+                </div>
+                <div class="animate-fade-in feature-card">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <h3>Optimized Performance</h3>
+                    <p>Lightning-fast loading times and smooth animations that keep users engaged without sacrificing quality.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="projects" id="projects">
+        <div class="container">
+            <h2 class="section-title">Recent Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <img src="images/ecommerce.png" alt="Project 1">
+                    <div class="project-overlay">
+                        <a href="#" class="btn">View Project</a>
+                    </div>
+                    <div class="project-content">
+                        <h3>E-Commerce Platform</h3>
+                        <p>A fully responsive online store with advanced filtering and shopping cart capabilities.</p>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <img src="images/portfolio2.jpg" alt="Project 2">
+                    <div class="project-overlay">
+                        <a href="#" class="btn">View Project</a>
+                    </div>
+                    <div class="project-content">
+                        <h3>Portfolio Website</h3>
+                        <p>A creative showcase for a digital artist featuring dynamic galleries and animations.</p>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <img src="images/how-to-rebrand.jpg" alt="Project 3">
+                    <div class="project-overlay">
+                        <a href="#" class="btn">View Project</a>
+                    </div>
+                    <div class="project-content">
+                        <h3>Corporate Rebrand</h3>
+                        <p>A complete digital transformation for a financial services firm with custom dashboards.</p>
+                    </div>
+                </div>
+                <div class="project-card">
+                    <img src="images/elearning.jpeg" alt="Project 4">
+                    <div class="project-overlay">
+                        <a href="#" class="btn">View Project</a>
+                    </div>
+                    <div class="project-content">
+                        <h3>Educational Platform</h3>
+                        <p>An interactive learning environment with progress tracking and resource libraries.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" style="background-color: var(--background-color); transition: background-color var(--transition-speed);">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            <form style="max-width: 600px; margin: 0 auto; padding: 2rem; background-color: var(--card-bg); border-radius: 8px; box-shadow: 0 5px 15px var(--shadow-color); transition: background-color var(--transition-speed), box-shadow var(--transition-speed);">
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="name" style="display: block; margin-bottom: 0.5rem; color: var(--text-color); transition: color var(--transition-speed);">Name</label>
+                    <input type="text" id="name" style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px; background-color: var(--background-color); color: var(--text-color); transition: all var(--transition-speed);">
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="email" style="display: block; margin-bottom: 0.5rem; color: var(--text-color); transition: color var(--transition-speed);">Email</label>
+                    <input type="email" id="email" style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px; background-color: var(--background-color); color: var(--text-color); transition: all var(--transition-speed);">
+                </div>
+                <div style="margin-bottom: 1.5rem;">
+                    <label for="message" style="display: block; margin-bottom: 0.5rem; color: var(--text-color); transition: color var(--transition-speed);">Message</label>
+                    <textarea id="message" rows="5" style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px; background-color: var(--background-color); color: var(--text-color); transition: all var(--transition-speed);"></textarea>
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="logo">CSS3 Showcase</div>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+                <div class="footer-bottom">
+                    &copy; 2025 CSS3 Showcase. All rights reserved.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Dark Mode Toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const body = document.body;
+        
+        darkModeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            
+            // Change icon based on mode
+            const icon = darkModeToggle.querySelector('i');
+            if (body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        });
+    </script>
+</body>
+</html>
