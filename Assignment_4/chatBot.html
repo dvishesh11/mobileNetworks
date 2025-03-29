@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Simple Chatbot</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      max-width: 600px;
+    }
+    #chat-container {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #ccc;
+      padding: 10px;
+      height: 400px;
+      overflow: hidden;
+    }
+    #chat-window {
+      flex: 1;
+      overflow-y: auto;
+      margin-bottom: 10px;
+      padding: 5px;
+      border: 1px solid #ddd;
+    }
+    .message {
+      margin: 5px 0;
+      padding: 8px 10px;
+      border-radius: 4px;
+      max-width: 80%;
+      word-wrap: break-word;
+    }
+    .user-message {
+      background-color: #e6f7ff;
+      align-self: flex-end;
+      text-align: right;
+    }
+    .bot-message {
+      background-color: #f1f1f1;
+      align-self: flex-start;
+      text-align: left;
+    }
+    #input-area {
+      display: flex;
+      gap: 5px;
+    }
+    #user-input {
+      flex: 1;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+    #send-btn {
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Simple Chatbot</h1>
+  <div id="chat-container">
+    <div id="chat-window"></div>
+    <div id="input-area">
+      <input type="text" id="user-input" placeholder="Type your message..." />
+      <button id="send-btn">Send</button>
+    </div>
+  </div>
+
+  <script>
+    const chatWindow = document.getElementById("chat-window");
+    const userInput = document.getElementById("user-input");
+    const sendBtn = document.getElementById("send-btn");
+
+    sendBtn.addEventListener("click", handleUserMessage);
+    userInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") handleUserMessage();
+    });
+
+    function handleUserMessage() {
+      const message = userInput.value.trim();
+      if (!message) return;
+      appendMessage(message, "user-message");
+      userInput.value = "";
+      setTimeout(() => {
+        const botReply = getBotResponse(message);
+        appendMessage(botReply, "bot-message");
+      }, 500);
+    }
+
+    function getBotResponse(userMsg) {
+      const msg = userMsg.toLowerCase();
+      if (msg.includes("hello") || msg.includes("hi")) {
+        return "Hello! How can I help you today?";
+      } else if (msg.includes("time")) {
+        return "I don't have a watch, but I can still chat!";
+      } else if (msg.includes("bye")) {
+        return "Goodbye! Have a great day!";
+      } else {
+        return "I'm not sure how to respond to that. Could you rephrase?";
+      }
+    }
+
+    function appendMessage(text, className) {
+      const messageDiv = document.createElement("div");
+      messageDiv.classList.add("message", className);
+      messageDiv.textContent = text;
+      chatWindow.appendChild(messageDiv);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Assignment_4A</title>
+</head>
+<body>
+
+<h1>JavaScript Variables, Functions, Conditions, and Loops Demo</h1>
+
+<!-- Buttons to trigger different demos -->
+<button onclick="calculateBMI()">Calculate BMI</button>
+<button onclick="convertTemperature()">Convert Temperature</button>
+<button onclick="validateUserInput()">Validate User Input</button>
+<button onclick="generateList()">Generate List</button>
+
+<div id="output"></div>
+
+<script>
+  // 1. Demonstrating Variables (var, let, const)
+  var globalVar = "I am declared with var (function-scoped or globally-scoped).";
+  let blockScopeVar = "I am declared with let (block-scoped).";
+  const constantVar = "I am declared with const (cannot be reassigned).";
+
+  // 2. Functions for basic calculations
+
+  // 2a. BMI Calculator
+  function calculateBMI() {
+    // Prompt the user for weight (kg) and height (meters)
+    let weight = parseFloat(prompt("Enter your weight in kilograms (e.g., 70):"));
+    let height = parseFloat(prompt("Enter your height in meters (e.g., 1.75):"));
+
+    // Basic validation using an if-else
+    if (isNaN(weight) || isNaN(height) || weight <= 0 || height <= 0) {
+      document.getElementById("output").innerText =
+        "Invalid weight or height. Please try again.";
+      return;
+    }
+
+    // Calculate BMI
+    let bmi = weight / (height * height);
+    document.getElementById("output").innerText =
+      `Your BMI is: ${bmi.toFixed(2)}`;
+  }
+
+  // 2b. Temperature Converter (Celsius <-> Fahrenheit)
+  function convertTemperature() {
+    // Prompt the user for a temperature
+    let temp = parseFloat(prompt("Enter a temperature value:"));
+    // Prompt for type of temperature
+    let type = prompt("Is this in Celsius (C) or Fahrenheit (F)?");
+
+    // Validate the input using a switch-case
+    switch (type.toUpperCase()) {
+      case "C":
+        // Convert Celsius to Fahrenheit
+        let fahrenheit = (temp * 9/5) + 32;
+        document.getElementById("output").innerText =
+          `${temp}°C is ${fahrenheit.toFixed(2)}°F`;
+        break;
+      case "F":
+        // Convert Fahrenheit to Celsius
+        let celsius = (temp - 32) * 5/9;
+        document.getElementById("output").innerText =
+          `${temp}°F is ${celsius.toFixed(2)}°C`;
+        break;
+      default:
+        document.getElementById("output").innerText =
+          "Please specify either 'C' or 'F'.";
+        break;
+    }
+  }
+
+  // 3. Conditions to validate user input
+  // Here is a simple example function that uses if-else
+  function validateUserInput() {
+    let age = parseInt(prompt("Enter your age:"));
+
+    if (isNaN(age) || age < 0) {
+      document.getElementById("output").innerText = "Invalid age entered.";
+    } else if (age < 18) {
+      document.getElementById("output").innerText =
+        `You are ${age} years old, which is under 18. Access denied.`;
+    } else {
+      document.getElementById("output").innerText =
+        `You are ${age} years old. Access granted.`;
+    }
+  }
+
+  // 4. Loops (for, while, do-while) to generate dynamic lists
+  function generateList() {
+    // Clear previous output
+    document.getElementById("output").innerText = "";
+
+    // Using a 'for' loop to create a numbered list
+    let listHTML = "<h3>Generated List:</h3><ol>";
+    for (let i = 1; i <= 5; i++) {
+      listHTML += `<li>Item number ${i}</li>`;
+    }
+    listHTML += "</ol>";
+
+    // Using a 'while' loop to add extra text
+    let count = 0;
+    listHTML += "<p>Additional text added via 'while' loop: ";
+    while (count < 3) {
+      listHTML += `Pass #${count + 1} `;
+      count++;
+    }
+    listHTML += "</p>";
+
+    // Using a 'do-while' loop to show it runs at least once
+    let doWhileCount = 0;
+    listHTML += "<p>Added via 'do-while' loop: ";
+    do {
+      listHTML += `Iteration #${doWhileCount + 1} `;
+      doWhileCount++;
+    } while (doWhileCount < 2);
+    listHTML += "</p>";
+
+    document.getElementById("output").innerHTML = listHTML;
+  }
+
+  // For demonstration, log the variables to the console:
+  console.log(globalVar);
+  console.log(blockScopeVar);
+  console.log(constantVar);
+</script>
+
+</body>
+</html>
