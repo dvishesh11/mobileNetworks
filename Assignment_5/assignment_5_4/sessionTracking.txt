@@ -1,0 +1,256 @@
+**C:\xampp\tomcat\webapps\MyApp\index.html**
+
+<!-- index.html: Provides links to the different session tracking demos -->
+<html>
+  <body>
+    <h2>Session Tracking Demos</h2>
+    <ul>
+      <li><a href="CookieSetterServlet">Cookie Demo (Set Username)</a></li>
+      <li><a href="CookieReaderServlet">Cookie Demo (Read Username)</a></li>
+      <li><a href="URLRewritingDemoServlet">URL Rewriting Demo</a></li>
+      <li>
+        <a href="SessionPreferenceServlet?theme=dark&language=en">
+          Session Preferences Demo (Theme &amp; Language)
+        </a>
+      </li>
+    </ul>
+  </body>
+</html>
+
+
+-------------------------------------------------------------------------------------------------------
+
+
+**C:\xampp\tomcat\webapps\MyApp\WEB-INF\web.xml**
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- web.xml: Configures all the servlets for session tracking demos -->
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
+                             http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+  
+  <servlet>
+    <servlet-name>CookieSetterServlet</servlet-name>
+    <servlet-class>com.example.CookieSetterServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CookieSetterServlet</servlet-name>
+    <url-pattern>/CookieSetterServlet</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>CookieReaderServlet</servlet-name>
+    <servlet-class>com.example.CookieReaderServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CookieReaderServlet</servlet-name>
+    <url-pattern>/CookieReaderServlet</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>URLRewritingDemoServlet</servlet-name>
+    <servlet-class>com.example.URLRewritingDemoServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>URLRewritingDemoServlet</servlet-name>
+    <url-pattern>/URLRewritingDemoServlet</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>URLRewritingTargetServlet</servlet-name>
+    <servlet-class>com.example.URLRewritingTargetServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>URLRewritingTargetServlet</servlet-name>
+    <url-pattern>/URLRewritingTargetServlet</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>SessionPreferenceServlet</servlet-name>
+    <servlet-class>com.example.SessionPreferenceServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SessionPreferenceServlet</servlet-name>
+    <url-pattern>/SessionPreferenceServlet</url-pattern>
+  </servlet-mapping>
+  
+</web-app>
+
+
+-------------------------------------------------------------------------------------------------------
+
+
+**C:\xampp\tomcat\webapps\MyApp\WEB-INF\classes\com\example\CookieSetterServlet.java**
+
+// CookieSetterServlet.java: Sets a cookie with a username for session tracking.
+package com.example;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class CookieSetterServlet extends HttpServlet {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String username = "JohnDoe"; // Example username; can be dynamic
+        Cookie userCookie = new Cookie("username", username);
+        userCookie.setMaxAge(60 * 60); // Cookie valid for 1 hour
+        response.addCookie(userCookie);
+        
+        response.setContentType("text/html");
+        response.getWriter().println("<html><body>");
+        response.getWriter().println("<h1>Username cookie set to: " + username + "</h1>");
+        response.getWriter().println("<p><a href='CookieReaderServlet'>Read Username Cookie</a></p>");
+        response.getWriter().println("</body></html>");
+    }
+}
+
+
+-------------------------------------------------------------------------------------------------------
+
+
+**C:\xampp\tomcat\webapps\MyApp\WEB-INF\classes\com\example\CookieReaderServlet.java**
+
+// CookieReaderServlet.java: Reads the username from the cookie and displays it.
+package com.example;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class CookieReaderServlet extends HttpServlet {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String username = null;
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("username".equals(cookie.getName())) {
+                    username = cookie.getValue();
+                    break;
+                }
+            }
+        }
+        
+        response.setContentType("text/html");
+        response.getWriter().println("<html><body>");
+        if (username != null) {
+            response.getWriter().println("<h1>Username from Cookie: " + username + "</h1>");
+        } else {
+            response.getWriter().println("<h1>No username cookie found.</h1>");
+        }
+        response.getWriter().println("</body></html>");
+    }
+}
+
+
+-------------------------------------------------------------------------------------------------------
+
+
+**C:\xampp\tomcat\webapps\MyApp\WEB-INF\classes\com\example\URLRewritingDemoServlet.java**
+
+// URLRewritingDemoServlet.java: Demonstrates URL rewriting by encoding the URL with the session ID.
+package com.example;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class URLRewritingDemoServlet extends HttpServlet {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Generate an encoded URL that includes the session ID if cookies are disabled
+        String rewrittenURL = response.encodeURL("URLRewritingTargetServlet");
+        
+        response.setContentType("text/html");
+        response.getWriter().println("<html><body>");
+        response.getWriter().println("<h1>URL Rewriting Demo</h1>");
+        response.getWriter().println("<p><a href='" + rewrittenURL + "'>Go to Target Servlet</a></p>");
+        response.getWriter().println("</body></html>");
+    }
+}
+
+
+-------------------------------------------------------------------------------------------------------
+
+
+**C:\xampp\tomcat\webapps\MyApp\WEB-INF\classes\com\example\URLRewritingTargetServlet.java**
+
+// URLRewritingTargetServlet.java: Displays the session ID from the request.
+package com.example;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class URLRewritingTargetServlet extends HttpServlet {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String sessionId = request.getRequestedSessionId();
+        
+        response.setContentType("text/html");
+        response.getWriter().println("<html><body>");
+        response.getWriter().println("<h1>URL Rewriting Target</h1>");
+        response.getWriter().println("<p>Session ID: " + sessionId + "</p>");
+        response.getWriter().println("</body></html>");
+    }
+}
+
+
+-------------------------------------------------------------------------------------------------------
+
+
+**C:\xampp\tomcat\webapps\MyApp\WEB-INF\classes\com\example\SessionPreferenceServlet.java**
+
+// SessionPreferenceServlet.java: Stores and retrieves user preferences using HttpSession.
+package com.example;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+public class SessionPreferenceServlet extends HttpServlet {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Obtain the session, creating one if necessary
+        HttpSession session = request.getSession();
+        
+        // If parameters are provided, store them as preferences in the session
+        String theme = request.getParameter("theme");
+        String language = request.getParameter("language");
+        if (theme != null) {
+            session.setAttribute("theme", theme);
+        }
+        if (language != null) {
+            session.setAttribute("language", language);
+        }
+        
+        // Retrieve preferences from session
+        String sessionTheme = (String) session.getAttribute("theme");
+        String sessionLanguage = (String) session.getAttribute("language");
+        
+        response.setContentType("text/html");
+        response.getWriter().println("<html><body>");
+        response.getWriter().println("<h1>Session Preferences</h1>");
+        response.getWriter().println("<p>Theme: " + (sessionTheme != null ? sessionTheme : "Not set") + "</p>");
+        response.getWriter().println("<p>Language: " + (sessionLanguage != null ? sessionLanguage : "Not set") + "</p>");
+        response.getWriter().println("</body></html>");
+    }
+}
+
+

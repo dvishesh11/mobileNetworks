@@ -1,0 +1,7 @@
+CGI vs. Servlets ->
+
+CGI and Servlets are both ways to generate dynamic web content, but they work quite differently. With CGI, every time a user makes a request, the server launches a separate process to run the script, which can quickly add up in terms of resource use and slow down your application under heavy load.
+
+Servlets, on the other hand, are built on Java and run inside a dedicated web container. This means a single instance of a servlet can handle many requests simultaneously using multithreading, making it far more efficient. Servlets also enjoy benefits from Java’s robust ecosystem, such as strong error handling, integrated security features, and easier management of resources, which help create more scalable and maintainable applications overall.
+
+In short, while CGI might work well for simpler tasks or lower traffic, Servlets offer a more performance-oriented and reliable approach for modern web applications.

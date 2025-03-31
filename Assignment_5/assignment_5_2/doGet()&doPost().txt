@@ -1,0 +1,77 @@
+**C:\xampp\tomcat\webapps\MyApp\index.html**
+
+<!-- index.html: Provides forms to test both GET and POST methods -->
+<html>
+  <body>
+    <h2>Test GET Request</h2>
+    <form action="WelcomeServlet" method="get">
+      <input type="submit" value="Send GET">
+    </form>
+    <h2>Test POST Request</h2>
+    <form action="WelcomeServlet" method="post">
+      Name: <input type="text" name="name">
+      <input type="submit" value="Send POST">
+    </form>
+  </body>
+</html>
+
+
+----------------------------------------------------------------------------------------------
+
+
+**C:\xampp\tomcat\webapps\MyApp\WEB-INF\web.xml**
+
+<!-- web.xml: Configures the WelcomeServlet -->
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
+                             http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+  <servlet>
+    <servlet-name>WelcomeServlet</servlet-name>
+    <servlet-class>com.example.WelcomeServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>WelcomeServlet</servlet-name>
+    <url-pattern>/WelcomeServlet</url-pattern>
+  </servlet-mapping>
+</web-app>
+
+
+----------------------------------------------------------------------------------------------
+
+
+**C:\xampp\tomcat\webapps\MyApp\WEB-INF\classes\com\example\WelcomeServlet.java**
+// WelcomeServlet.java: Implements both doGet() and doPost() methods
+package com.example;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class WelcomeServlet extends HttpServlet {
+    // Handle GET requests and display a welcome message.
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html");
+        response.getWriter().println("<html><body><h1>Welcome via GET!</h1></body></html>");
+    }
+
+    // Handle POST requests, read the 'name' parameter and display a personalized welcome.
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html");
+        String name = request.getParameter("name");
+        if (name == null || name.trim().isEmpty()) {
+            name = "Guest";
+        }
+        response.getWriter().println("<html><body><h1>Welcome " + name + " via POST!</h1></body></html>");
+    }
+}
+
+

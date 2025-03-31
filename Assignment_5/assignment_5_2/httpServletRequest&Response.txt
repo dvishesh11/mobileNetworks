@@ -1,0 +1,77 @@
+**C:\xampp\tomcat\webapps\MyApp\index.html**
+
+<!-- index.html: Provides a link with query parameters to test ClientDetailsServlet -->
+<html>
+  <body>
+    <h2>Test Client Details</h2>
+    <a href="ClientDetailsServlet?param1=exampleValue">Click here to view client details</a>
+  </body>
+</html>
+
+
+-----------------------------------------------------------------------------------------------------
+
+
+**C:\xampp\tomcat\webapps\MyApp\WEB-INF\web.xml**
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- web.xml: Configures the ClientDetailsServlet -->
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
+                             http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+  <servlet>
+    <servlet-name>ClientDetailsServlet</servlet-name>
+    <servlet-class>com.example.ClientDetailsServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ClientDetailsServlet</servlet-name>
+    <url-pattern>/ClientDetailsServlet</url-pattern>
+  </servlet-mapping>
+</web-app>
+
+
+-----------------------------------------------------------------------------------------------------
+
+
+**C:\xampp\tomcat\webapps\MyApp\WEB-INF\classes\com\example\ClientDetailsServlet.java**
+
+// ClientDetailsServlet.java: Retrieves query parameters and displays client request details.
+package com.example;
+
+import java.io.IOException;
+import java.util.Enumeration;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class ClientDetailsServlet extends HttpServlet {
+    // Handle GET requests: display query parameters and client request details.
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html");
+        StringBuilder output = new StringBuilder("<html><body>");
+        
+        // Retrieve query parameters from URL
+        output.append("<h2>Query Parameters:</h2>");
+        Enumeration<String> params = request.getParameterNames();
+        while (params.hasMoreElements()) {
+            String param = params.nextElement();
+            String value = request.getParameter(param);
+            output.append("<p>").append(param).append(": ").append(value).append("</p>");
+        }
+        
+        // Display client request details
+        output.append("<h2>Client Request Details:</h2>");
+        String ipAddress = request.getRemoteAddr();
+        String userAgent = request.getHeader("User-Agent");
+        output.append("<p>IP Address: ").append(ipAddress).append("</p>");
+        output.append("<p>User-Agent: ").append(userAgent).append("</p>");
+        
+        output.append("</body></html>");
+        response.getWriter().println(output.toString());
+    }
+}
+

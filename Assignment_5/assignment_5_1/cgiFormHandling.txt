@@ -1,0 +1,54 @@
+**form.html**
+
+<!-- HTML form that sends data to the CGI script -->
+<html>
+  <body>
+    <form action="/cgi-bin/submit.py" method="post">
+      Name: <input type="text" name="name">
+      <input type="submit" value="Submit">
+    </form>
+  </body>
+</html>
+
+
+------------------------------------------------------------------------------------------------------
+
+
+**C:\xampp\cgi-bin\submit.py**
+
+#!/usr/bin/env python3
+# CGI script to process form submission; place in XAMPP's CGI directory
+
+import cgi, cgitb
+cgitb.enable()  # Enable debugging
+
+print("Content-Type: text/html")
+print()
+
+form = cgi.FieldStorage()
+name = form.getvalue('name', 'World')
+
+print("<html>")
+print("  <body>")
+print("    <h1>Hello, {}!</h1>".format(name))
+print("  </body>")
+print("</html>")
+
+#!/usr/bin/env python3
+# CGI script to process form submission; place in your server's CGI directory
+
+import cgi, cgitb
+cgitb.enable()  # Enable debugging
+
+print("Content-Type: text/html")
+print()
+
+form = cgi.FieldStorage()
+name = form.getvalue('name', 'World')
+
+print("<html>")
+print("  <body>")
+print("    <h1>Hello, {}!</h1>".format(name))
+print("  </body>")
+print("</html>")
+

@@ -1,0 +1,174 @@
+**C:\xampp\tomcat\webapps\MyApp\login.html**
+
+<!-- login.html: Login form for the JDBC-based login system -->
+<html>
+  <head>
+    <title>Login Page</title>
+    <script>
+      // Display error message if 'error' parameter exists
+      window.onload = function() {
+        var params = new URLSearchParams(window.location.search);
+        if (params.has('error')) {
+          document.getElementById('errorMsg').innerHTML = params.get('error');
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <h2>Login</h2>
+    <div id="errorMsg" style="color:red;"></div>
+    <form action="LoginServlet" method="post">
+      Username: <input type="text" name="username" /><br/>
+      Password: <input type="password" name="password" /><br/>
+      <input type="submit" value="Login" />
+    </form>
+  </body>
+</html>
+
+
+-------------------------------------------------------------------------------------------------------
+
+
+**C:\xampp\tomcat\webapps\MyApp\WEB-INF\web.xml**
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- web.xml: Configures LoginServlet and WelcomeServlet -->
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
+                             http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+  
+  <servlet>
+    <servlet-name>LoginServlet</servlet-name>
+    <servlet-class>com.example.LoginServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>LoginServlet</servlet-name>
+    <url-pattern>/LoginServlet</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>WelcomeServlet</servlet-name>
+    <servlet-class>com.example.WelcomeServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>WelcomeServlet</servlet-name>
+    <url-pattern>/WelcomeServlet</url-pattern>
+  </servlet-mapping>
+  
+</web-app>
+
+
+-------------------------------------------------------------------------------------------------------
+
+
+**C:\xampp\tomcat\webapps\MyApp\WEB-INF\classes\com\example\DBConnection.java**
+
+// DBConnection.java: Provides a method to obtain a JDBC connection.
+package com.example;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class DBConnection {
+    public static Connection getConnection() throws ClassNotFoundException, SQLException {
+        // Load MySQL JDBC Driver
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        // Return connection (update URL, user, and password as needed)
+        return DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb", "user", "password");
+    }
+}
+
+
+-------------------------------------------------------------------------------------------------------
+
+
+**C:\xampp\tomcat\webapps\MyApp\WEB-INF\classes\com\example\LoginServlet.java**
+
+// LoginServlet.java: Validates user credentials using JDBC.
+package com.example;
+
+import java.io.IOException;
+import java.sql.*;
+import javax.servlet.ServletException;
+import javax.servlet.http.*;
+
+public class LoginServlet extends HttpServlet {
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Retrieve credentials from request
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        
+        boolean validUser = false;
+        // Validate user against the database
+        try (Connection conn = DBConnection.getConnection()) {
+            String sql = "SELECT * FROM users WHERE username=? AND password=?";
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, username);
+                ps.setString(2, password);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        validUser = true;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new ServletException("Database connection error", e);
+        }
+        
+        if (validUser) {
+            // Credentials valid, forward to WelcomeServlet
+            HttpSession session = request.getSession();
+            session.setAttribute("user", username);
+            request.getRequestDispatcher("WelcomeServlet").forward(request, response);
+        } else {
+            // Invalid credentials, redirect back with error message
+            response.sendRedirect("login.html?error=Invalid+credentials");
+        }
+    }
+}
+
+
+-------------------------------------------------------------------------------------------------------
+
+
+**C:\xampp\tomcat\webapps\MyApp\WEB-INF\classes\com\example\WelcomeServlet.java**
+
+// WelcomeServlet.java: Displays a welcome message after successful login.
+package com.example;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.*;
+
+public class WelcomeServlet extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession(false);
+        String username = (session != null) ? (String) session.getAttribute("user") : null;
+        response.setContentType("text/html");
+        response.getWriter().println("<html><body>");
+        if (username != null) {
+            response.getWriter().println("<h1>Welcome, " + username + "!</h1>");
+        } else {
+            response.getWriter().println("<h1>No user logged in.</h1>");
+        }
+        response.getWriter().println("</body></html>");
+    }
+    
+    // Handle POST requests as well if forwarded
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        doGet(request, response);
+    }
+}
+
+
+
+

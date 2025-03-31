@@ -1,0 +1,89 @@
+**C:\xampp\tomcat\webapps\MyApp\index.html**
+
+<!-- index.html: A simple page to trigger requests for the logging filter -->
+<html>
+  <body>
+    <h2>Welcome to MyApp</h2>
+    <p>Click <a href="index.html">here</a> to refresh and generate a log entry.</p>
+  </body>
+</html>
+
+
+---------------------------------------------------------------------------------------------------
+
+
+**C:\xampp\tomcat\webapps\MyApp\WEB-INF\web.xml**
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- web.xml: Configures the LoggingFilter for all incoming requests -->
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
+                             http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+  <filter>
+    <filter-name>LoggingFilter</filter-name>
+    <filter-class>com.example.LoggingFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>LoggingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+</web-app>
+
+
+---------------------------------------------------------------------------------------------------
+
+
+**C:\xampp\tomcat\webapps\MyApp\WEB-INF\classes\com\example\LoggingFilter.java**
+
+// LoggingFilter.java: Logs IP address, current time, and requested URL for every request.
+package com.example;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+
+public class LoggingFilter implements Filter {
+    
+    // Initialize filter if necessary
+    public void init(FilterConfig filterConfig) throws ServletException {
+        // Filter initialization logic (if needed)
+    }
+    
+    // Main method to log request details and pass the request along the filter chain
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+        HttpServletRequest httpReq = (HttpServletRequest) request;
+        
+        String ipAddress = request.getRemoteAddr();
+        String requestedURL = httpReq.getRequestURL().toString();
+        String currentTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+        
+        // Log the request details (this prints to the server console/log)
+        System.out.println("Request from IP: " + ipAddress +
+                           " at " + currentTime +
+                           " for URL: " + requestedURL);
+        
+        // Continue processing the request
+        chain.doFilter(request, response);
+    }
+    
+    // Cleanup filter resources if necessary
+    public void destroy() {
+        // Cleanup code (if needed)
+    }
+}
+
+
+
+
+
+

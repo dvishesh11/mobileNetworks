@@ -1,0 +1,160 @@
+**C:\xampp\tomcat\webapps\MyApp\login.jsp**
+
+<!-- login.jsp: Login form view with error message display -->
+<html>
+  <head>
+    <title>Login Page</title>
+  </head>
+  <body>
+    <h2>Login</h2>
+    <form action="LoginServlet" method="post">
+      Username: <input type="text" name="username" /><br/>
+      Password: <input type="password" name="password" /><br/>
+      <input type="submit" value="Login" />
+    </form>
+    <p style="color:red;">
+      <%= (request.getAttribute("error") != null) ? request.getAttribute("error") : "" %>
+    </p>
+  </body>
+</html>
+
+
+----------------------------------------------------------------------------------------------------
+
+
+**C:\xampp\tomcat\webapps\MyApp\welcome.jsp**
+
+<!-- welcome.jsp: Displays a welcome message after successful login -->
+<html>
+  <head>
+    <title>Welcome Page</title>
+  </head>
+  <body>
+    <h2>Welcome, <%= session.getAttribute("user") %>!</h2>
+  </body>
+</html>
+
+
+----------------------------------------------------------------------------------------------------
+
+
+**C:\xampp\tomcat\webapps\MyApp\WEB-INF\web.xml**
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- web.xml: Configures servlets for the MVC framework -->
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
+                             http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+  
+  <servlet>
+    <servlet-name>LoginServlet</servlet-name>
+    <servlet-class>com.example.LoginServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>LoginServlet</servlet-name>
+    <url-pattern>/LoginServlet</url-pattern>
+  </servlet-mapping>
+  
+</web-app>
+
+
+----------------------------------------------------------------------------------------------------
+
+
+**C:\xampp\tomcat\webapps\MyApp\WEB-INF\classes\com\example\DBConnection.java**
+
+// DBConnection.java: Provides a JDBC connection to the MySQL database.
+package com.example;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+public class DBConnection {
+    public static Connection getConnection() throws ClassNotFoundException, SQLException {
+        // Load MySQL JDBC Driver
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        // Update URL, username, and password as required for your database
+        return DriverManager.getConnection("jdbc:mysql://localhost:3306/mydb", "user", "password");
+    }
+}
+
+
+----------------------------------------------------------------------------------------------------
+
+
+**C:\xampp\tomcat\webapps\MyApp\WEB-INF\classes\com\example\UserDAO.java**
+
+// UserDAO.java: Data Access Object for user validation.
+package com.example;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+public class UserDAO {
+    // Validates user credentials against the database "users" table.
+    public static boolean validateUser(String username, String password) {
+        boolean valid = false;
+        String sql = "SELECT * FROM users WHERE username=? AND password=?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+             
+            ps.setString(1, username);
+            ps.setString(2, password);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    valid = true;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace(); // Log error appropriately in production
+        }
+        return valid;
+    }
+}
+
+
+----------------------------------------------------------------------------------------------------
+
+
+**C:\xampp\tomcat\webapps\MyApp\WEB-INF\classes\com\example\LoginServlet.java**
+
+// LoginServlet.java: Handles login logic by interacting with UserDAO and dispatching to JSP views.
+package com.example;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.*;
+import javax.servlet.RequestDispatcher;
+
+public class LoginServlet extends HttpServlet {
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Retrieve credentials from login form
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        
+        // Validate credentials against database
+        if (UserDAO.validateUser(username, password)) {
+            // On successful validation, store user in session and forward to welcome.jsp
+            HttpSession session = request.getSession();
+            session.setAttribute("user", username);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("welcome.jsp");
+            dispatcher.forward(request, response);
+        } else {
+            // On failure, set error attribute and forward back to login.jsp
+            request.setAttribute("error", "Invalid credentials");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+            dispatcher.forward(request, response);
+        }
+    }
+}
+
+
+
+
+

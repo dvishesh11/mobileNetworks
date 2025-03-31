@@ -1,0 +1,96 @@
+**C:\xampp\tomcat\webapps\MyApp\ajaxForm.html**
+
+<!-- ajaxForm.html: AJAX-based form submission using vanilla JavaScript -->
+<html>
+  <head>
+    <title>AJAX Form Submission</title>
+    <script>
+      function submitForm() {
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "AjaxServlet", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            var jsonResponse = JSON.parse(xhr.responseText);
+            document.getElementById("response").innerHTML = "Message: " + jsonResponse.message;
+          }
+        };
+        var data = "name=" + encodeURIComponent(document.getElementById("name").value);
+        xhr.send(data);
+        return false; // Prevent default form submission
+      }
+    </script>
+  </head>
+  <body>
+    <h2>AJAX Form Submission</h2>
+    <form onsubmit="return submitForm();">
+      Name: <input type="text" id="name" name="name" />
+      <input type="submit" value="Submit" />
+    </form>
+    <div id="response"></div>
+  </body>
+</html>
+
+
+------------------------------------------------------------------------------------------------------
+
+
+**C:\xampp\tomcat\webapps\MyApp\WEB-INF\web.xml**
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- web.xml: Configures the AjaxServlet -->
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
+                             http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+  <servlet>
+    <servlet-name>AjaxServlet</servlet-name>
+    <servlet-class>com.example.AjaxServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AjaxServlet</servlet-name>
+    <url-pattern>/AjaxServlet</url-pattern>
+  </servlet-mapping>
+</web-app>
+
+
+------------------------------------------------------------------------------------------------------
+
+
+**C:\xampp\tomcat\webapps\MyApp\WEB-INF\classes\com\example\AjaxServlet.java**
+
+// AjaxServlet.java: Processes AJAX POST request and returns a JSON response.
+package com.example;
+
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.http.*;
+
+public class AjaxServlet extends HttpServlet {
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+           throws ServletException, IOException {
+        // Retrieve the 'name' parameter from the request
+        String name = request.getParameter("name");
+        if (name == null || name.trim().isEmpty()) {
+            name = "Guest";
+        }
+        
+        // Set response content type to JSON and proper encoding
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
+        // Create a simple JSON response manually
+        String jsonResponse = "{\"message\": \"Hello, " + name + "!\"}";
+        
+        // Write the JSON response
+        response.getWriter().write(jsonResponse);
+    }
+}
+
+
+
+
+
+

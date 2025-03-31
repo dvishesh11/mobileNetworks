@@ -1,0 +1,111 @@
+**C:\xampp\tomcat\webapps\MyApp\index.html**
+
+<!-- index.html: Provides links to set and retrieve shared data -->
+<html>
+  <body>
+    <h2>Set Application-wide Data</h2>
+    <a href="ContextSetterServlet">Set Data</a>
+    <h2>Get Application-wide Data</h2>
+    <a href="ContextDisplayServlet">Get Data</a>
+  </body>
+</html>
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+**C:\xampp\tomcat\webapps\MyApp\WEB-INF\web.xml**
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- web.xml: Configures the servlets for sharing application data -->
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
+                             http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         version="3.1">
+  <servlet>
+    <servlet-name>ContextSetterServlet</servlet-name>
+    <servlet-class>com.example.ContextSetterServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ContextSetterServlet</servlet-name>
+    <url-pattern>/ContextSetterServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>ContextDisplayServlet</servlet-name>
+    <servlet-class>com.example.ContextDisplayServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ContextDisplayServlet</servlet-name>
+    <url-pattern>/ContextDisplayServlet</url-pattern>
+  </servlet-mapping>
+</web-app>
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+**C:\xampp\tomcat\webapps\MyApp\WEB-INF\classes\com\example\ContextSetterServlet.java**
+
+// ContextSetterServlet.java: Sets an attribute in ServletContext for application-wide use.
+package com.example;
+
+import java.io.IOException;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class ContextSetterServlet extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Store data in ServletContext
+        ServletContext context = getServletContext();
+        context.setAttribute("appData", "This is shared application data.");
+        
+        response.setContentType("text/html");
+        response.getWriter().println("<html><body>");
+        response.getWriter().println("<h1>Data has been set in the application context.</h1>");
+        response.getWriter().println("</body></html>");
+    }
+}
+
+
+--------------------------------------------------------------------------------------------------------
+
+
+**C:\xampp\tomcat\webapps\MyApp\WEB-INF\classes\com\example\ContextDisplayServlet.java**
+
+// ContextDisplayServlet.java: Retrieves and displays data from ServletContext.
+package com.example;
+
+import java.io.IOException;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class ContextDisplayServlet extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        // Retrieve shared data from ServletContext
+        ServletContext context = getServletContext();
+        String appData = (String) context.getAttribute("appData");
+        
+        response.setContentType("text/html");
+        response.getWriter().println("<html><body>");
+        response.getWriter().println("<h1>Shared Application Data:</h1>");
+        if (appData != null) {
+            response.getWriter().println("<p>" + appData + "</p>");
+        } else {
+            response.getWriter().println("<p>No data found. Please set it first.</p>");
+        }
+        response.getWriter().println("</body></html>");
+    }
+}
+
+
